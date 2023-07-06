@@ -25,7 +25,7 @@ def get_model():
 @app.route('/data', methods=['POST'])
 def get_data():
     data = request.get_json()
-    data['time'] = dt.datetime.now()
+    data['time'] = dt.datetime.now().isoformat()
     db.insert(data)
     print(data)
     return jsonify({'message': 'data received successfully'})
