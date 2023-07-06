@@ -11,7 +11,7 @@ NeuralNetwork* nn;
 
 const char* ssid = "custodma_2G";
 const char* password = "berserknd";
-const char* serverUrl = "http://192.168.0.119:5000";
+const char* serverUrl = "http://192.168.0.119:5001";
 DynamicJsonDocument doc(2*converted_model_tflite_len);
 String response;
 HTTPClient http;
