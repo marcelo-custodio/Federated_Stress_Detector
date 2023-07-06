@@ -1,38 +1,34 @@
 from flask import Flask, request, jsonify
+import pandas as pd
+import base64
+from tinydb import TinyDB, Query
+import datetime as dt
 
 app = Flask(__name__)
 
-# Rota para receber dados via solicitação POST
-@app.route('/data', methods=['POST'])
-def receive_data():
-    data = request.get_json()
-    sensor = data['sensor']
-    value = data['value']
+db = TinyDB('db.json')
+dataset = pd.read_csv('dataset.csv')
+if not dataset.empty:
+    print("Dataset loaded successfully")
+else:
+    print("Failed to load dataset")
 
-    # Processar os dados recebidos conforme desejado
-    # Por exemplo, você pode armazenar os dados em um banco de dados ou realizar alguma ação com base neles
-
-    print(f"Received data from {sensor}: {value}")
-
-    return 'Data received'
+@app.route('/model', methods=['GET'])
+def get_model():
+    response = {}
+    with open('../FederatedLearning/model.tflite', 'rb') as f:
+        response['model_encoded'] = base64.b64encode(f.read()).decode('ascii')
+    print("model sent successfully")
+    return jsonify(response)
 
 # Rota para obter dados via solicitação GET
-@app.route('/data', methods=['GET'])
+@app.route('/data', methods=['POST'])
 def get_data():
-    # Lógica para retornar os dados em formato JSON
-    # Certifique-se de que os dados estejam sendo retornados corretamente
-
-    data = {
-        'sensor': 'ESP32',
-        'value': 42
-    }
-
-    return jsonify(data)
-
-# Rota para imprimir "Hello, World!"
-@app.route('/hello')
-def hello_world():
-    return 'Hello, World!'
+    data = request.get_json()
+    data['time'] = dt.datetime.now()
+    db.insert(data)
+    print(data)
+    return jsonify({'message': 'data received successfully'})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

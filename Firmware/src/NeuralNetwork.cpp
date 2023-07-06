@@ -7,7 +7,7 @@
 
 const int kArenaSize = 20000;
 
-NeuralNetwork::NeuralNetwork(unsigned char* converted_model)
+NeuralNetwork::NeuralNetwork(void* converted_model)
 {
     error_reporter = new tflite::MicroErrorReporter();
 

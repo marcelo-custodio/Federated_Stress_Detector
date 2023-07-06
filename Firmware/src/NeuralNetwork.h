@@ -27,7 +27,7 @@ private:
 
 public:
     float *getInputBuffer();
-    NeuralNetwork(unsigned char* converted_model);
+    NeuralNetwork(void* converted_model);
     float predict();
 };
 
